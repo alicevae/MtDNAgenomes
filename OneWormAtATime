@@ -1,0 +1,8 @@
+cat ./Project_HS_100/Sample_7665/7665_TCCGGAGA-TATAGCCT_L004_R1_001.fastq.gz  ./Project_HS_100/Sample_7665/7665_TCCGGAGA-TATAGCCT_L005_R1_001.fastq.gz ./Project_HS_100/Sample_7665/7665_TCCGGAGA-TATAGCCT_L006_R1_001.fastq.gz ./Project_HS_100/Sample_7665/7665_TCCGGAGA-TATAGCCT_L007_R1_001.fastq.gz  > 7665_R1.fastq.gz
+cat ./Project_HS_100/Sample_7665/7665_TCCGGAGA-TATAGCCT_L004_R2_001.fastq.gz  ./Project_HS_100/Sample_7665/7665_TCCGGAGA-TATAGCCT_L005_R2_001.fastq.gz ./Project_HS_100/Sample_7665/7665_TCCGGAGA-TATAGCCT_L006_R2_001.fastq.gz ./Project_HS_100/Sample_7665/7665_TCCGGAGA-TATAGCCT_L007_R2_001.fastq.gz  > 7665_R2.fastq.gz
+
+bowtie2 -x Mt1genome -1 7665_R1.fastq.gz -2 7665_R2.fastq.gz -S Mt7665.sam
+samtools view -b Mt7665.sam > Mt7665.bam
+samtools sort -o Mt7665_sorted.bam Mt7665.bam
+samtools index Mt7665_sorted.bam
+samtools mpileup -uf MitochondrionsNCBI/LumbricoidesMtLiu.fasta Mt7665_sorted.bam | bcftools call -c | vcfutils.pl vcf2fq > cnsMt7665.fq
